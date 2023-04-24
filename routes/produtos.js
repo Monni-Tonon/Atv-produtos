@@ -34,7 +34,29 @@ produtos.route('/')
     }
 })
 .put(async (req, res) => {
-    res.json({message: "rota put"})
+    const {id, nome, descricao, qtde, preco, desconto, dataDesconto, categoria, img} = req.body;
+    try {
+        if (!id || !nome || !descricao || !qtde || !preco || !categoria || !img) {
+            return res.status(400).json({ message: "Campos obrigatórios ausentes." });
+        }
+
+        const produtoEncontrado = await Produto.findById(id);
+        if (!produtoEncontrado) {
+            return res.status(404).json({ message: "produto não encontrado!" });
+        }
+
+        const response = await Produto.findByIdAndUpdate
+        (id, { nome, descricao, qtde, preco, desconto, dataDesconto, categoria, img }, { new: true })
+        if (response) {
+            res.status(200).json(response);
+        } else {
+            res.status(404).json({ mensagem: "produto não encontrado" });
+        }
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    }
 })
 .delete(async (req, res)=>{
     const { id } = req.body;
