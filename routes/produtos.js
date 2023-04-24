@@ -4,8 +4,14 @@ const Produto = require('../models/Produto');
 
 produtos.route('/')
 .get(async (req, res) => {
-    res.json({message: "rota get"})
+   try {
+    const response = await Produto.find();
+    res.status(200).json(response);
+   } catch(err) {
+    res.status(500).json(err);
+   }
 })
+
 .post(async (req, res)=>{
     const {nome, descricao, qtde, preco, desconto, dataDesconto, categoria, img} = req.body;
 
@@ -31,7 +37,16 @@ produtos.route('/')
     res.json({message: "rota put"})
 })
 .delete(async (req, res)=>{
-    res.json({mensagem: 'rota delete'})
+    const { id } = req.body;
+        try {
+            const response = await Produto.findByIdAndRemove(id);
+            if (!response) {
+                return res.status(404).json({ mensagem: "Produto não encontrado" });
+            }
+            res.status(200).json(response);
+        } catch (err) {
+            res.status(500).json(err);
+        }
 });
 
 module.exports = produtos;
