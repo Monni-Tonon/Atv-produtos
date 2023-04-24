@@ -5,7 +5,6 @@ const produtos = require("./routes/produtos");
 const app = express();
 
 app.use(express.json());
-
 mongoose.connect(process.env.MONGODB_URL)
 
 // chamar rotas
