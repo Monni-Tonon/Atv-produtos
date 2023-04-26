@@ -1,0 +1,328 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "API de cadastro de produtos"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor local"
+    }
+  ],
+  "paths": {
+    "/produtos": {
+      "get": {
+        "summary": "Obter produtos",
+        "tags": ["Rotas de Produtos"],
+        "description": "Obtém todos os produtos ou produtos filtrados por nome, preço ou categoria.",
+        "parameters": [
+          {
+            "name": "nome",
+            "in": "query",
+            "description": "Nome do produto para filtrar",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "preco",
+            "in": "query",
+            "description": "Preço mínimo do produto para filtrar",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "float"
+            }
+          },
+          {
+            "name": "categoria",
+            "in": "query",
+            "description": "Categoria do produto para filtrar",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de produtos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Produto"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor"
+          }
+        }
+      },
+      "post": {
+        "summary": "Criar produtos",
+        "tags": ["Rotas de Produtos"],
+        "description": "Insere novos produtos no banco de dados",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": {
+                    "type": "string",
+                    "description": "Nome do produto."
+                  },
+                  "descricao": {
+                    "type": "string",
+                    "description": "Descrição do produto."
+                  },
+                  "qtde": {
+                    "type": "integer",
+                    "description": "Quantidade do produto."
+                  },
+                  "preco": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Preço do produto."
+                  },
+                  "desconto": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Desconto do produto (0 a 1)."
+                  },
+                  "dataDesconto": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data do desconto no formato ISO 8601."
+                  },
+                  "categoria": {
+                    "type": "string",
+                    "description": "Categoria do produto."
+                  },
+                  "img": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "Imagens do produto (máximo de 5)."
+                  }
+                },
+                "required": [
+                  "nome",
+                  "descricao",
+                  "qtde",
+                  "preco",
+                  "categoria",
+                  "img"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Produto criado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Produto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos ou ausentes."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualizar produto",
+        "tags": ["Rotas de Produtos"],
+        "description": "Atualiza um produto existente com base nos dados fornecidos.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "ObjectId",
+                    "description": "ID do produto."
+                  },
+                  "nome": {
+                    "type": "string",
+                    "description": "Nome do produto."
+                  },
+                  "descricao": {
+                    "type": "string",
+                    "description": "Descrição do produto."
+                  },
+                  "qtde": {
+                    "type": "integer",
+                    "description": "Quantidade do produto."
+                  },
+                  "preco": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Preço do produto."
+                  },
+                  "desconto": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Desconto do produto (0 a 1)."
+                  },
+                  "dataDesconto": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data do desconto no formato ISO 8601."
+                  },
+                  "categoria": {
+                    "type": "string",
+                    "description": "Categoria do produto."
+                  },
+                  "img": {
+                    "type": "string",
+                    "description": "URL da imagem do produto."
+                  }
+                },
+                "required": [
+                  "id",
+                  "nome",
+                  "descricao",
+                  "qtde",
+                  "preco",
+                  "categoria",
+                  "img"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Produto atualizado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Produto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos ou ausentes."
+          },
+          "404": {
+            "description": "Produto não encontrado."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      },
+      "delete": {
+        "summary": "Excluir um produto existente",
+        "tags": ["Rotas de Produtos"],
+        "description": "Exclui um produto existente com base no ID fornecido.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "format": "ObjectId",
+                    "description": "ID do produto."
+                  }
+                },
+                "required": ["id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Produto excluído com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Produto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos ou ausentes."
+          },
+          "404": {
+            "description": "Produto não encontrado."
+          },
+          "500": {
+            "description": "Erro interno do servidor."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Produto": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "format": "ObjectId"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "descricao": {
+            "type": "string"
+          },
+          "qtde": {
+            "type": "number",
+            "format": "integer"
+          },
+          "preco": {
+            "type": "number",
+            "format": "float"
+          },
+          "desconto": {
+            "type": "number",
+            "format": "float"
+          },
+          "dataDesconto": {
+            "type": "string",
+            "format": "date"
+          },
+          "precoComDesconto": {
+            "type": "number",
+            "format": "float"
+          },
+          "categoria": {
+            "type": "string"
+          },
+          "img": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

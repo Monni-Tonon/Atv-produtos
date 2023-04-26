@@ -25,12 +25,15 @@ const Produto = model (
         dataDesconto: {
             type: Date,
         },
+        precoComDesc: {
+            type: Number,
+        },
         categoria: {
             type: String,
             required: true,
         },
         img: {
-            type: String,
+            type: [String],
             required: true,
         }
     })
