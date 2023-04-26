@@ -2,13 +2,16 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const produtos = require("./routes/produtos");
-const app = express();
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json')
+
+const produtos = require("./routes/produtos");
+const app = express();
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.json());
+
 mongoose.connect(process.env.MONGODB_URL)
 
 // chamar rotas
@@ -23,5 +26,5 @@ app.get('/uploads/:filename', (req, res) => {
 
 
 app.listen(3000, () => {
-    console.log("Aplicação rodando em http://localhost:3000")
+    console.log("Aplicação rodando em http://localhost:3000");
 })
